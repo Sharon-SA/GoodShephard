@@ -5,7 +5,7 @@
 
 {% block content %}
     <h1>Inventory</h1>
-    <table>
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>UPS code</th>
@@ -19,8 +19,8 @@
                 <td>{{ inventory.UPScode }}</td>
                 <td>{{ inventory.item_description }}</td>
                 <td><a href="{% url "inventory_edit" pk=inventory.pk %}" class="btn btn-warning">Edit</a></td>
-                <td><a href="{% url "inventory_delete" pk=inventory.pk %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-warning">Delete</a></td>
-                <td><a href="" class="btn btn-warning">Orders that Requested this Item</a></td>
+                <td><a href="{% url "inventory_delete" pk=inventory.pk %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a></td>
+                <td><a href="" class="btn btn-primary">Orders that Requested this Item</a></td>
             </tr>
         {% endfor %}
         </tbody>

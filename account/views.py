@@ -12,6 +12,7 @@ from django.shortcuts import redirect
 def home(request):
     return render(request, 'base.html')
 
+
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -21,7 +22,7 @@ def user_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    #return HttpResponse('Authenticated successfully')
+                    # return HttpResponse('Authenticated successfully')
                     return dashboard(request)
                 else:
                     return HttpResponse('Disabled account')
@@ -154,3 +155,19 @@ def order_delete(request, pk):
     order.delete()
     return redirect('crm/order_list')
 
+
+@login_required
+def client_new(request):
+    if request.method == "POST":
+        form = ClientForms(request.POST)
+        if form.is_valid():
+            client = form.save(commit=False)
+            client.created_date = timezone.now()
+            client.save()
+            client = Client.objects.filter(created_date__lte=timezone.now())
+            return render(request, 'crm/client_list.html',
+                          {'client': client})
+    else:
+        form = ClientForms()
+        # print("Else")
+    return render(request, 'crm/client_new.html', {'form': form})

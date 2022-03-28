@@ -4,6 +4,9 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
     <link href="{% static "css/base.css" %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
     <div id="header">
@@ -13,8 +16,8 @@
                 <li {% if section == "dashboard" %} class="selected" {% endif %}>
                     <a href="{% url "dashboard" %}">My Dashboard</a>
                 </li>
-                <li {% if section == "people" %}class="selected"{% endif %}>
-                    <a href="{% url "client_list" %}">People</a>
+                <li {% if section == "clients" %}class="selected"{% endif %}>
+                    <a href="{% url "client_list" %}">Clients</a>
                 </li>
                 <li {% if section == "Orders" %} class="selected"{% endif %}>
                     <a href="{% url "order_list" %}">Orders</a>

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block content %}
+    <h1>Delete {{ client.first_name }} {{ client.last_name }}?</h1>
+    <form method="post">
+    {% csrf_token %}
+        <input type="submit" value="Delete">
+    <a href="{% url "crm:client_list" pk=client.pk %}">Cancel</a>
+    </form>
+{% endblock %}
+</html>

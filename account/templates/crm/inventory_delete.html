@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block content %}
+    <h1>Delete {{ inventory.UPScode }} {{ order.item_description }}?</h1>
+    <form method="post">
+    {% csrf_token %}
+        <input type="submit" value="Delete">
+    <a href="{% url "crm:inventory_list" pk=inventory.pk %}">Cancel</a>
+    </form>
+{% endblock %}
+</html>

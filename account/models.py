@@ -5,6 +5,8 @@ from django.utils import timezone
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50, blank=False, null=False, default='a')
+    last_name = models.CharField(max_length=50, blank=False, null=False, default='a')
     date_of_birth = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=20, blank=False, null=False)
     address = models.CharField(max_length=100, blank=False, null=False)

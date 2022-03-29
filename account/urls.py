@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #app_name = 'account'
 
 
@@ -29,3 +30,4 @@ urlpatterns = [
     path('order/<int:pk>/delete/', views.order_delete, name='order_delete'),
 ]
 
+urlpatterns += staticfiles_urlpatterns()

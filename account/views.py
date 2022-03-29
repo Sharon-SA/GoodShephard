@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
@@ -7,6 +8,7 @@ from .models import *
 from .forms import *
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
+from .forms import UpdateUserForm, UpdateProfileForm
 
 
 def home(request):
@@ -35,7 +37,7 @@ def user_login(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'base.html', {'section': 'dashboard'})
+    return render(request, 'account/dashboard.html', {'section': 'dashboard'})
 
 
 def register(request):
@@ -61,14 +63,16 @@ def register(request):
 @login_required
 def edit(request):
     if request.method == 'POST':
-        user_form = UserEditForm(instance=request.user, data=request.POST)
-        profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect('/account/')
     else:
-        user_form = UserEditForm(instance=request.user)
-        profile_form = ProfileEditForm(instance=request.user.profile)
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
     return render(request, 'account/edit.html', {'user_form': user_form, 'profile_form': profile_form})
 
 

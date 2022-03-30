@@ -47,13 +47,16 @@ class Client(models.Model):
 
 class Visit(models.Model):
     visit_note = models.CharField(max_length=2000)
-    date = models.DateField()
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(default=timezone.now)
 
+    def created(self):
+        self.created_date = timezone.now()
+        self.save()
     # helped_by = models.ForeignKey(Profile, related_name='profile_user')
 
     def __str__(self):
-        return self.date, self.client
+        return str(self.pk)
 
 
 class Inventory(models.Model):
@@ -66,7 +69,7 @@ class Inventory(models.Model):
         self.save()
 
     def __str__(self):
-        return self.UPScode, self.item_description
+        return self.item_description
 
 
 class Order(models.Model):
@@ -83,4 +86,4 @@ class Order(models.Model):
         self.save()
 
     def __str__(self):
-        return self.client, self.date
+        return '%s %s' % (self.item_description, self.delivered_quantity)

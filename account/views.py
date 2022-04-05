@@ -150,14 +150,14 @@ def order_edit(request, pk):
         return render(request, 'crm/order_list.html', {'order': order})
     else:
         # edit
-        form = ClientForms(instance=order)
+        form = OrderForms(instance=order)
     return render(request, 'crm/order_edit.html', {'form': form})
 
 
 def order_delete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.delete()
-    return redirect('crm/order_list')
+    return redirect('/order_list')
 
 
 @login_required

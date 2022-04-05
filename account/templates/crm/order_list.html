@@ -20,12 +20,12 @@
         <tbody>
         {% for order in order %}
             <tr>
-                <td>{{ order.client }}</td>
-                <td>{{ order.UPScode }}</td>
-                <td>{{ order.item_description }}</td>
+                <td>{{ order.client.first_name }} {{ order.client.last_name }}</td>
+                <td>{{ order.UPScode.UPScode }}</td>
+                <td>{{ order.item_description.item_description }}</td>
                 <td>{{ order.request_quantity }}</td>
                 <td>{{ order.delivered_quantity }}</td>
-                <td>{{ order.date }}</td>
+                <td>{{ order.date.created_date }}</td>
                 <td><a href="{% url "order_edit" pk=order.pk %}" class="btn btn-warning">Edit</a></td>
                 <td><a href="{% url "order_delete" pk=order.pk %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a></td>
                 <td><a href="" class="btn btn-primary">Download Report</a></td>

@@ -101,7 +101,7 @@ def client_edit(request, pk):
 def client_delete(request, pk):
     client = get_object_or_404(Client, pk=pk)
     client.delete()
-    return redirect('crm/client_list')
+    return redirect('/client_list')
 
 
 def inventory_list(request):

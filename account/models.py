@@ -42,7 +42,7 @@ class Client(models.Model):
 
 
     def __str__(self):
-        return str(self.phone)
+        return str(self.pk)
 
 
 class Visit(models.Model):
@@ -69,7 +69,7 @@ class Inventory(models.Model):
         self.save()
 
     def __str__(self):
-        return self.item_description
+        return str(self.pk)
 
 
 class Order(models.Model):

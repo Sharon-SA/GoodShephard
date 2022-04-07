@@ -104,6 +104,7 @@ def client_delete(request, pk):
     return redirect('/client_list')
 
 
+
 def inventory_list(request):
     inventory = Inventory.objects.filter(created_date__lte=timezone.now())
     return render(request, 'crm/inventory_list.html', {'inventory': inventory})
@@ -129,7 +130,7 @@ def inventory_edit(request, pk):
 def inventory_delete(request, pk):
     inventory = get_object_or_404(Inventory, pk=pk)
     inventory.delete()
-    return redirect('crm/inventory_list')
+    return redirect('/inventory_list')
 
 
 def order_list(request):

@@ -9,6 +9,7 @@ from .forms import *
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from .forms import UpdateUserForm, UpdateProfileForm
+from django.views.generic import ListView
 
 
 def home(request):
@@ -103,6 +104,17 @@ def client_delete(request, pk):
     client.delete()
     return redirect('/client_list')
 
+def client_orders(request, pk):
+    orders = Order.objects.all()
+    clientid = ""
+    order = []
+    for ordr in orders:
+        if ordr.client_id == pk:
+            order.append(ordr)
+            clientid = ordr.client_id
+    print('ordr is', clientid)
+    return render(request, 'crm/client_orders.html', {'order': order, 'clientId': clientid})
+
 
 
 def inventory_list(request):
@@ -142,7 +154,7 @@ def order_edit(request, pk):
     order = get_object_or_404(Order, pk=pk)
     if request.method == "POST":
         # update
-        form = OrderForms(request.POST, instance=order)
+        form = OrdereditForms(request.POST, instance=order)
         if form.is_valid():
             order = form.save(commit=False)
             order.updated_date = timezone.now()
@@ -151,7 +163,7 @@ def order_edit(request, pk):
         return render(request, 'crm/order_list.html', {'order': order})
     else:
         # edit
-        form = OrderForms(instance=order)
+        form = OrdereditForms(instance=order)
     return render(request, 'crm/order_edit.html', {'form': form})
 
 
@@ -176,3 +188,22 @@ def client_new(request):
         form = ClientForms()
         # print("Else")
     return render(request, 'crm/client_new.html', {'form': form})
+
+@login_required
+def order_new(request, pk):
+    if request.method == "POST":
+        form = OrderForms(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.created_date = timezone.now()
+            order.save()
+            order = Order.objects.filter(created_date__lte=timezone.now())
+            return render(request, 'crm/order_list.html',
+                          {'order': order})
+    else:
+        form = OrderForms()
+        print("Else", form.fields['client'])
+        form.fields['client'].initial = pk
+    return render(request, 'crm/order_new.html', {'form': form})
+
+

@@ -22,12 +22,15 @@ urlpatterns = [
     path('client/<int:pk>/edit/', views.client_edit, name='client_edit'),
     path('client/<int:pk>/delete/', views.client_delete, name='client_delete'),
     path('client/create/', views.client_new, name='client_new'),
+    path('client/<int:pk>/orders/', views.client_orders, name='client_orders'),
     path('inventory_list', views.inventory_list, name='inventory_list'),
-    path('inventory/<int:pk>/edit/', views.inventory_edit, name='inventory_edit'),
-    path('inventory/<int:pk>/delete/', views.inventory_delete, name='inventory_delete'),
     path('order_list', views.order_list, name='order_list'),
+    path('order/<int:pk>/create/', views.order_new, name='order_new'),
     path('order/<int:pk>/edit/', views.order_edit, name='order_edit'),
     path('order/<int:pk>/delete/', views.order_delete, name='order_delete'),
+    path('inventory/<int:pk>/edit/', views.inventory_edit, name='inventory_edit'),
+    path('inventory/<int:pk>/delete/', views.inventory_delete, name='inventory_delete'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -42,7 +42,7 @@ class Client(models.Model):
 
 
     def __str__(self):
-        return str(self.pk)
+        return self.first_name + " " + self.last_name
 
 
 class Visit(models.Model):
@@ -56,20 +56,22 @@ class Visit(models.Model):
     # helped_by = models.ForeignKey(Profile, related_name='profile_user')
 
     def __str__(self):
-        return str(self.pk)
+        return str(self.created_date)
 
 
 class Inventory(models.Model):
     UPScode = models.CharField(max_length=15)
     item_description = models.CharField(max_length=100)
+    total_quantity = models.IntegerField(blank=False, null=False)
     created_date = models.DateTimeField(default=timezone.now)
 
     def created(self):
         self.created_date = timezone.now()
         self.save()
 
+
     def __str__(self):
-        return str(self.pk)
+        return self.item_description
 
 
 class Order(models.Model):
@@ -86,4 +88,5 @@ class Order(models.Model):
         self.save()
 
     def __str__(self):
-        return '%s %s' % (self.item_description, self.delivered_quantity)
+        return '{} {} '.format(self.client, self.UPScode ,self.item_description, self.delivered_quantity, self.created_date)
+

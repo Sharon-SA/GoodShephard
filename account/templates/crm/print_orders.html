@@ -1,7 +1,3 @@
-{% extends "base.html" %}
-{% block title %}
-    Orders
-{% endblock %}
 
 {% block content %}
     <h1>Orders</h1>
@@ -14,7 +10,7 @@
                 <th>Requested Quantity</th>
                 <th>Delivered Quantity</th>
                 <th>Date Entered</th>
-                <th colspan="3">Actions</th>
+
             </tr>
         </thead>
         <tbody>
@@ -26,11 +22,9 @@
                 <td>{{ order.request_quantity }}</td>
                 <td>{{ order.delivered_quantity }}</td>
                 <td>{{ order.date.created_date }}</td>
-                <td><a href="{% url "order_edit" pk=order.pk %}" class="btn btn-warning">Edit</a></td>
-                <td><a href="{% url "order_delete" pk=order.pk %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a></td>
-                <td><a href="{% url "download_report" pk=order.pk %}" class="btn btn-primary">Download Report</a></td>            </tr>
+
+            </tr>
         {% endfor %}
         </tbody>
     </table>
-        <a href="{% url "download_all_report" %}" class="btn btn-primary">Download All Orders Report</a>
 {% endblock %}

@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
+from django.template.loader import get_template
+
 from .forms import LoginForm, UserRegisterationForm, UserEditForm, ProfileEditForm
 from django.contrib.auth.decorators import login_required
 from .models import *
@@ -10,6 +12,8 @@ from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from .forms import UpdateUserForm, UpdateProfileForm
 from django.views.generic import ListView
+
+from .utils import render_to_pdf
 
 
 def home(request):
@@ -152,19 +156,24 @@ def order_list(request):
 
 def order_edit(request, pk):
     order = get_object_or_404(Order, pk=pk)
+    visit = get_object_or_404(Visit, pk=order.date.pk)
     if request.method == "POST":
         # update
-        form = OrdereditForms(request.POST, instance=order)
+        form = OrderForms(request.POST, instance=order)
+        visitForm = VisitForms(request.POST, instance=visit)
         if form.is_valid():
             order = form.save(commit=False)
+            visit = visitForm.save(commit=False)
             order.updated_date = timezone.now()
             order.save()
+            visit.save()
             order = Order.objects.filter(created_date__lte=timezone.now())
         return render(request, 'crm/order_list.html', {'order': order})
     else:
         # edit
-        form = OrdereditForms(instance=order)
-    return render(request, 'crm/order_edit.html', {'form': form})
+        form = OrderForms(instance=order)
+        visitForm = VisitForms(instance=visit)
+    return render(request, 'crm/order_edit.html', {'form': form, 'visitForm':visitForm})
 
 
 def order_delete(request, pk):
@@ -207,3 +216,37 @@ def order_new(request, pk):
     return render(request, 'crm/order_new.html', {'form': form})
 
 
+def download_orderReport(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    template = get_template('crm/print_order_details.html')
+    context = {'form': order}
+    html = template.render(context)
+    pdf = render_to_pdf('crm/print_order_details.html', context)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "order_details.pdf"
+        content = "inline; filename='%s'" % filename
+        download = request.GET.get("download")
+        if download:
+            content = "attachment; filename='%s'" % (filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
+
+
+def download_allorderReport(request):
+    order = Order.objects.filter(created_date__lte=timezone.now())
+    template = get_template('crm/print_orders.html')
+    context = {'order': order}
+    html = template.render(context)
+    pdf = render_to_pdf('crm/print_orders.html', context)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "print_orders.html.pdf"
+        content = "inline; filename='%s'" % filename
+        download = request.GET.get("download")
+        if download:
+            content = "attachment; filename='%s'" % (filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")

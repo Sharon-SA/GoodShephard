@@ -53,8 +53,12 @@ class InventoryForms(forms.ModelForm):
 class OrderForms(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ('client', 'UPScode', 'item_description', 'request_quantity', 'delivered_quantity',
-                  'date')
+        fields = ('client', 'UPScode', 'item_description', 'request_quantity', 'delivered_quantity')
+
+class VisitForms(forms.ModelForm):
+    class Meta:
+        model = Visit
+        fields = ('visit_note',)
 
 class OrdereditForms(forms.ModelForm):
     class Meta:

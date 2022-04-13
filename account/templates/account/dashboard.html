@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block content %}
+    <div style="float: right;">
+     <form method="POST" action="{% url 'client_search' %}" >
+        {% csrf_token %}
+        <input type="search" placeholder="Search for Client" aria-label="Search" name="searched" id="searched">
+        <button padding="10px" class="btn btn-primary active" type="submit">Find Client</button>
+    </form>
+    </div>
     <h1>Dashboard</h1>
     <p>
         Welcome to your dashboard.
@@ -15,5 +22,8 @@
         {% load static %}
         <img src="{% static "account/media/img.png" %}" alt="dashboard" />
     </p>
+
+
+
 
 {% endblock %}

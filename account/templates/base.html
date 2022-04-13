@@ -83,11 +83,6 @@
                 <a href="{% url "register" %}">Signup</a>
             {% endif %}
         </span>
-    <form method="POST" action="{% url 'client_search' %}" >
-        {% csrf_token %}
-        <input type="search" placeholder="Search for Client" aria-label="Search" name="searched" id="searched">
-        <button padding="10px" class="btn btn-primary active" type="submit">Find Client</button>
-    </form>
     </div>
     <div class="content" id="content">
         {% block content %}

@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.template.loader import get_template
@@ -216,6 +216,18 @@ def order_new(request, pk):
     return render(request, 'crm/order_new.html', {'form': form})
 
 
+def client_search(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        clients = Client.objects.filter(first_name__contains=searched)
+        # if 'searched' in request.GET:
+        #     clients = list()
+        #     for client in clients:
+        #         clients.append(client.first_name)
+        #     return JsonResponse(clients, safe=False)
+        return render(request, 'crm/client_search.html', {'searched': searched, 'clients': clients})
+    else:
+        return render(request, 'crm/client_search.html', {})
 def download_orderReport(request, pk):
     order = get_object_or_404(Order, pk=pk)
     template = get_template('crm/print_order_details.html')

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+    {% if searched %}
+    <h1>You Searched for {{ searched }}</h1>
+        <br/>
+        {% for client in clients %}
+            <a href="{% url 'client_orders' pk=client.pk %}" >{{ client }} - {{ client.phone }} </a><br/>
+        {% endfor %}
+    {% else %}
+        <h1>You forgot to enter a client!</h1>
+    {% endif %}
+{% endblock %}

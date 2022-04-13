@@ -159,7 +159,7 @@ def order_edit(request, pk):
     visit = get_object_or_404(Visit, pk=order.date.pk)
     if request.method == "POST":
         # update
-        form = OrderForms(request.POST, instance=order)
+        form = OrdereditForms(request.POST, instance=order)
         visitForm = VisitForms(request.POST, instance=visit)
         if form.is_valid():
             order = form.save(commit=False)
@@ -171,7 +171,7 @@ def order_edit(request, pk):
         return render(request, 'crm/order_list.html', {'order': order})
     else:
         # edit
-        form = OrderForms(instance=order)
+        form = OrdereditForms(instance=order)
         visitForm = VisitForms(instance=visit)
     return render(request, 'crm/order_edit.html', {'form': form, 'visitForm':visitForm})
 

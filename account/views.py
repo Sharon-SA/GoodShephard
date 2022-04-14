@@ -109,6 +109,7 @@ def client_delete(request, pk):
     return redirect('/client_list')
 
 def client_orders(request, pk):
+    print("pk is", pk)
     orders = Order.objects.all()
     clientid = ""
     order = []
@@ -116,6 +117,8 @@ def client_orders(request, pk):
         if ordr.client_id == pk:
             order.append(ordr)
             clientid = ordr.client_id
+    if clientid == "":
+        clientid = pk
     print('ordr is', clientid)
     return render(request, 'crm/client_orders.html', {'order': order, 'clientId': clientid})
 
@@ -225,9 +228,13 @@ def client_search(request):
         #     for client in clients:
         #         clients.append(client.first_name)
         #     return JsonResponse(clients, safe=False)
+        print("a")
         return render(request, 'crm/client_search.html', {'searched': searched, 'clients': clients})
     else:
+        print("b")
         return render(request, 'crm/client_search.html', {})
+
+
 def download_orderReport(request, pk):
     order = get_object_or_404(Order, pk=pk)
     template = get_template('crm/print_order_details.html')

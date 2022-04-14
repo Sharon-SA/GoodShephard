@@ -45,15 +45,19 @@ class ClientForms(forms.ModelForm):
 class InventoryForms(forms.ModelForm):
     class Meta:
         model = Inventory
-        fields = ('UPScode', 'item_description', 'total_quantity')
-
-
+        fields = ('UPScode', 'item_description')
 
 
 class OrderForms(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ('client', 'UPScode', 'item_description', 'request_quantity', 'delivered_quantity')
+        fields = ('client', 'UPScode', 'item_description', 'request_quantity', 'delivered_quantity', 'date')
+
+class NewOrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('client', 'item_description', 'request_quantity', 'delivered_quantity', 'date')
+
 
 class VisitForms(forms.ModelForm):
     class Meta:
@@ -63,8 +67,7 @@ class VisitForms(forms.ModelForm):
 class OrdereditForms(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ('client','item_description', 'request_quantity', 'delivered_quantity',
-                  'date')
+        fields = ('client','item_description', 'request_quantity', 'delivered_quantity')
 
 
 class UpdateUserForm(forms.ModelForm):

@@ -37,9 +37,8 @@ class Client(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
 
     def created(self):
-        self.created_date=timezone.now()
+        self.created_date = timezone.now()
         self.save()
-
 
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -53,7 +52,6 @@ class Visit(models.Model):
     def created(self):
         self.created_date = timezone.now()
         self.save()
-    # helped_by = models.ForeignKey(Profile, related_name='profile_user')
 
     def __str__(self):
         return str(self.created_date)
@@ -69,18 +67,18 @@ class Inventory(models.Model):
         self.created_date = timezone.now()
         self.save()
 
-
     def __str__(self):
-        return self.item_description
+        return str(self.item_description)
 
 
 class Order(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    UPScode = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name='inventory_UPScode')
+    UPScode = models.ForeignKey(Inventory, on_delete=models.SET_NULL, blank=True, null=True,
+                                related_name='inventory_UPScode')
     item_description = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name='inventory_item_description')
     request_quantity = models.IntegerField(blank=False, null=False)
     delivered_quantity = models.IntegerField(blank=False, null=False)
-    date = models.ForeignKey(Visit, on_delete=models.CASCADE)
+    date = models.DateTimeField(default=timezone.now)
     created_date = models.DateTimeField(default=timezone.now)
 
     def created(self):
@@ -88,5 +86,4 @@ class Order(models.Model):
         self.save()
 
     def __str__(self):
-        return '{} {} '.format(self.client, self.UPScode ,self.item_description, self.delivered_quantity, self.created_date)
-
+        return str(self.item_description)

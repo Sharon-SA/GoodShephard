@@ -12,7 +12,6 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>UPS code</th>
                 <th>Item Description</th>
                 <th>Requested Quantity</th>
                 <th>Delivered Quantity</th>
@@ -22,11 +21,10 @@
         {% for order in order %}
             <tbody>
             <tr>
-                <td>{{ order.UPScode.UPScode }}</td>
                 <td>{{ order.item_description.item_description }}</td>
                 <td>{{ order.request_quantity }}</td>
                 <td>{{ order.delivered_quantity }}</td>
-                <td>{{ order.date.created_date }}</td>
+                <td>{{ order.date }}</td>
             </tr>
             </tbody>
         {% endfor %}

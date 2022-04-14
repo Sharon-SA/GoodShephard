@@ -159,7 +159,11 @@ def order_list(request):
 
 def order_edit(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    visit = get_object_or_404(Visit, pk=order.date.pk)
+    visits = Visit.objects.all()
+    visit = ""
+    for vst in visits:
+        if order.client.id == vst.client_id:
+            visit = vst
     if request.method == "POST":
         # update
         form = OrdereditForms(request.POST, instance=order)
@@ -204,7 +208,7 @@ def client_new(request):
 @login_required
 def order_new(request, pk):
     if request.method == "POST":
-        form = OrderForms(request.POST)
+        form = NewOrderForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
             order.created_date = timezone.now()
@@ -213,7 +217,7 @@ def order_new(request, pk):
             return render(request, 'crm/order_list.html',
                           {'order': order})
     else:
-        form = OrderForms()
+        form = NewOrderForm()
         print("Else", form.fields['client'])
         form.fields['client'].initial = pk
     return render(request, 'crm/order_new.html', {'form': form})

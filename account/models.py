@@ -60,7 +60,7 @@ class Visit(models.Model):
 class Inventory(models.Model):
     UPScode = models.CharField(max_length=15)
     item_description = models.CharField(max_length=100)
-    total_quantity = models.IntegerField(blank=False, null=False)
+    total_quantity = models.IntegerField(blank=True, null=False, default=0)
     created_date = models.DateTimeField(default=timezone.now)
 
     def created(self):
@@ -73,8 +73,7 @@ class Inventory(models.Model):
 
 class Order(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    UPScode = models.ForeignKey(Inventory, on_delete=models.SET_NULL, blank=True, null=True,
-                                related_name='inventory_UPScode')
+    UPScode = models.ForeignKey(Inventory, on_delete=models.SET_NULL, blank=True, null=True, related_name='inventory_UPScode')
     item_description = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name='inventory_item_description')
     request_quantity = models.IntegerField(blank=False, null=False)
     delivered_quantity = models.IntegerField(blank=False, null=False)

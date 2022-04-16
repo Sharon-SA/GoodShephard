@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -159,11 +161,8 @@ def order_list(request):
 
 def order_edit(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    visits = Visit.objects.all()
-    visit = ""
-    for vst in visits:
-        if order.client.id == vst.client_id:
-            visit = vst
+    visit = get_object_or_404(Visit, pk=order.client.pk)
+
     if request.method == "POST":
         # update
         form = OrdereditForms(request.POST, instance=order)

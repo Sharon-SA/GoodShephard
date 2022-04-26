@@ -71,7 +71,7 @@ def register(request):
 def edit(request):
     if request.method == 'POST':
         user_form = UpdateUserForm(request.POST, instance=request.user)
-        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -79,7 +79,7 @@ def edit(request):
             return redirect('/account/')
     else:
         user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+        profile_form = UpdateProfileForm(instance=request.user)
     return render(request, 'account/edit.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
@@ -110,6 +110,7 @@ def client_delete(request, pk):
     client.delete()
     return redirect('/client_list')
 
+
 def client_orders(request, pk):
     print("pk is", pk)
     orders = Order.objects.all()
@@ -123,7 +124,6 @@ def client_orders(request, pk):
         clientid = pk
     print('ordr is', clientid)
     return render(request, 'crm/client_orders.html', {'order': order, 'clientId': clientid})
-
 
 
 def inventory_list(request):
@@ -179,7 +179,7 @@ def order_edit(request, pk):
         # edit
         form = OrdereditForms(instance=order)
         visitForm = VisitForms(instance=visit)
-    return render(request, 'crm/order_edit.html', {'form': form, 'visitForm':visitForm})
+    return render(request, 'crm/order_edit.html', {'form': form, 'visitForm': visitForm})
 
 
 def order_delete(request, pk):
@@ -203,6 +203,7 @@ def client_new(request):
         form = ClientForms()
         # print("Else")
     return render(request, 'crm/client_new.html', {'form': form})
+
 
 @login_required
 def order_new(request, pk):

@@ -5,3 +5,4 @@ sqlparse==0.4.2
 tzdata==2022.1
 xhtml2pdf~=0.2.5
 reportlab==3.6.6
+selenium~=4.1.3

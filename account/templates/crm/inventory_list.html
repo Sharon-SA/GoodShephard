@@ -18,7 +18,6 @@
                 <td>{{ inventory.UPScode }}</td>
                 <td>{{ inventory.item_description }}</td>
                 <td><a href="{% url "inventory_delete" pk=inventory.pk %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a></td>
-                <td><a href="" class="btn btn-primary">Orders that Requested this Item</a></td>
             </tr>
         {% endfor %}
         </tbody>

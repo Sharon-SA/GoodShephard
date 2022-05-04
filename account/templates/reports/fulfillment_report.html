@@ -1,0 +1,64 @@
+{% extends "base.html" %} {% block extrastyle %}
+<style>
+  .exportExcel {
+    background: url(https://img.icons8.com/material-outlined/24/000000/export-excel.png)
+      0 7px no-repeat;
+    background-size: 16px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    border: none;
+    box-shadow: unset;
+    padding: 0 0 0 16px !important;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>
+{% endblock %} {% block breadcrumbs %}
+{% endblock %} {% block content %}
+<div style="width: 100%; display: inline-block">
+  {% if data_list|length > 0 %}
+  <form
+    action="{% url 'export_order_csv' %}"
+    method="get">
+    <div
+      style="width: auto; margin-left: 20px; margin-bottom: 20px; float: left">
+      <button type="submit" class="exportExcel">
+        <span>Export to Excel</span>
+      </button>
+    </div>
+  </form>
+</div>
+<div
+  id="tableWrap"
+  style="width: 100%; display: inline-block">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="sticky"> Client Name </th>
+        <th class="sticky">Item Description</th>
+        <th class="sticky">Requested Quantity</th>
+        <th class="sticky">Delivered Quantity</th>
+        <th class="sticky">Date Entered</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in data_list %}
+      <tr>
+        <td>{{ order.client }}</td>
+        <td>{{ order.item_description.item_description }}</td>
+        <td>{{ order.request_quantity }}</td>
+        <td>{{ order.delivered_quantity }}</td>
+        <td>{{ order.date}}</td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div style="width: 100%; float: left">
+  <p id="data">No data</p>
+</div>
+{% endif %} {% endblock content %}

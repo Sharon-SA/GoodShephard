@@ -7,8 +7,10 @@
     <h1>Clients</h1>
 
      <div class="row">
+     {% if request.user.is_superuser %}
          <a href="{% url 'client_new' %}"><span
                     class="btn btn-primary">Register New Client</span></a>
+     {% endif %}
     </div>
 
     <table class="table table-striped">
@@ -30,9 +32,11 @@
                 <td>{{ client.zip }}</td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.phone }}</td>
+                {% if request.user.is_superuser %}
                 <td><a href="{% url "client_edit" pk=client.pk %}" class="btn btn-warning">Edit</a></td>
                 <td><a href="{% url "client_delete" pk=client.pk %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger">Delete</a></td>
                 <td><a href="{% url "client_orders" pk=client.pk %}" class="btn btn-primary">Orders</a></td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

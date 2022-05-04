@@ -27,7 +27,7 @@
   }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 600px) {
   .topnav.responsive {position: relative;}
   .topnav.responsive .icon {
     position: absolute;
@@ -57,7 +57,8 @@
                 <li {% if section == "dashboard" %} class="selected" {% endif %}>
                     <a href="{% url "dashboard" %}">My Dashboard</a>
                 </li>
-                <li {% if section == "clients" %}class="selected"{% endif %}>
+
+                <li {% if section == "clients" %} class="selected"{% endif %}>
                     <a href="{% url "client_list" %}">Clients</a>
                 </li>
                 <li {% if section == "Orders" %} class="selected"{% endif %}>

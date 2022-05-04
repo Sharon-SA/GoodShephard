@@ -66,6 +66,12 @@
                 <li {% if section == "inventory" %} class="selected"{% endif %}>
                     <a href="{% url "inventory_list" %}">Inventory</a>
                 </li>
+                {% if user.is_superuser %}
+                    <li {% if section == "reports" %} class="selected"{% endif %}>
+                    <a href="{% url "reports" %}">Reports</a>
+                </li>
+
+                    {% endif %}
                 <li><a href="javascript:void(0);" class="icon" onclick="myFunction()">
                     <i class="fa fa-bars"></i>
                     </a>

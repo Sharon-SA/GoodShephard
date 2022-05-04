@@ -1,9 +1,10 @@
+from django.template.defaulttags import url
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #app_name = 'account'
-
+from .views import export_client_visits_report_csv
 
 urlpatterns = [
     path('login/', views.user_login, name='login'),
@@ -33,6 +34,26 @@ urlpatterns = [
     path('inventory/<int:pk>/delete/', views.inventory_delete, name='inventory_delete'),
     path('order/<int:pk>/download/', views.download_orderReport, name='download_report'),
     path('orders_list_download', views.download_allorderReport, name='download_all_report'),
+    path('reports/',views.viewReport, name='reports'),
+    path('reports/clientvisits/', views.client_visits_report, name='client_visit_report'),
+    path('reports/ordersfulfilled', views.client_orders_fulfilled, name='orders_report'),
+    path('reports/inventory',views.inventory_report, name='inventory_report'),
+    path(
+        "/reports/client_visits/csv",
+        views.export_client_visits_report_csv,
+        name="export_client_visits_report_csv",
+    ),
+
+    path(
+        "/reports/orders_list/csv",
+        views.export_orders_list_report_csv,
+        name="export_order_csv",
+    ),
+path(
+        "/reports/inventory_list/csv",
+        views.export_inventory_list_report_csv,
+        name="export_inventory_report_csv",
+    ),
 
 ]
 

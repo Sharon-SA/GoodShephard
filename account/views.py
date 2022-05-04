@@ -1,10 +1,12 @@
-from datetime import timezone
+from datetime import timezone, datetime, timedelta
 
+import xlwt
 from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, HttpRequest
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.template.loader import get_template
+from django.urls import reverse
 
 from .forms import LoginForm, UserRegisterationForm, UserEditForm, ProfileEditForm
 from django.contrib.auth.decorators import login_required
@@ -17,6 +19,14 @@ from django.views.generic import ListView
 
 from .utils import render_to_pdf
 
+
+class ClientVisitsModelObject:
+    clientID: int = 0
+    client_first_name: str
+    client_last_name: str
+    firstdateTime: datetime
+    lastdateTime: datetime
+    numberofVisits: int = 0
 
 def home(request):
     return render(request, 'base.html')
@@ -273,3 +283,246 @@ def download_allorderReport(request):
         response['Content-Disposition'] = content
         return response
     return HttpResponse("Not found")
+
+
+def viewReport(request):
+
+
+    return render(request, 'reports/reports_list.html')
+
+
+def client_visits_report(request):
+    clientVisits = Visit.objects.all()
+
+    clientVisitsDataList = build_client_visits_list_from_clientVisits(clientVisits)
+    return render(request, 'reports/client_visits.html', {'data_list': clientVisitsDataList})
+
+
+def client_orders_fulfilled(request):
+    order = Order.objects.filter(created_date__lte=timezone.now())
+    return render(request, 'reports/fulfillment_report.html', {'data_list': order})
+
+
+def build_client_visits_list_from_clientVisits(clientVisits):
+    clientVisitsDataList = []
+    for clientVisit in clientVisits:
+        clientVisitsModelObject: ClientVisitsModelObject = None
+
+        for data in clientVisitsDataList:
+            if data.clientID == clientVisit.client.pk:
+                clientVisitsModelObject = data
+                break
+
+        if clientVisitsModelObject == None:
+            clientVisitsModelObject = ClientVisitsModelObject()
+            clientVisitsModelObject.clientID = clientVisit.client.pk
+            clientVisitsModelObject.client_first_name = clientVisit.client.first_name
+            clientVisitsModelObject.client_last_name = clientVisit.client.last_name
+            clientVisitsModelObject.firstdateTime = clientVisit.created_date
+            clientVisitsModelObject.lastdateTime = clientVisit.created_date
+            clientVisitsModelObject.firstdateTime = clientVisitsModelObject.firstdateTime.replace(tzinfo=timezone.utc)
+            clientVisitsModelObject.lastdateTime = clientVisitsModelObject.lastdateTime.replace(tzinfo=timezone.utc)
+            clientVisitsDataList.append(clientVisitsModelObject)
+
+        clientVisitsModelObject.numberofVisits += 1
+
+        if clientVisit.created_date < clientVisitsModelObject.firstdateTime:
+            clientVisitsModelObject.firstdateTime = clientVisit.created_date
+            clientVisitsModelObject.firstdateTime = clientVisitsModelObject.firstdateTime.replace(tzinfo=timezone.utc)
+
+        if clientVisit.created_date > clientVisitsModelObject.lastdateTime:
+            clientVisitsModelObject.lastdateTime = clientVisit.created_date
+            clientVisitsModelObject.lastdateTime = clientVisitsModelObject.lastdateTime.replace(tzinfo=timezone.utc)
+
+    return clientVisitsDataList
+
+
+def export_client_visits_report_csv(request: HttpRequest):
+    client_visits_data = Visit.objects.all()
+    if client_visits_data.__len__() == 0:
+        url = (
+            "{}?".format(reverse("client_visits_report")) )
+        messages.error(request, "Could not export excel sheet with given parameters.")
+        response = HttpResponseRedirect(url)
+        return response
+
+    response = HttpResponse(content_type="application/ms-excel")
+    response["Content-Disposition"] = 'attachment; filename="client_visits_report.xls"'
+
+    workbook = xlwt.Workbook(encoding="utf-8")
+
+    # adding sheet
+    worksheet = workbook.add_sheet("Report")
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    # headers are bold
+    font_style.font.bold = True
+    font_style = xlwt.XFStyle()
+    # headers are bold
+    font_style.font.bold = True
+
+    # column header names, you can use your own headers here
+    columns = [
+        "Client Id",
+        "First name",
+        "Last name",
+        "First visit datetime",
+        "Last visit datetime",
+        "Number of visits",
+    ]
+
+    # write column headers in sheet
+    for col_num in range(len(columns)):
+        worksheet.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+    date_format = xlwt.XFStyle()
+    date_format.num_format_str = "dd/mm/yyyy HH:MM"
+
+    # get your data, from database or from a text file...
+    data_list: list[ClientVisitsModelObject] = build_client_visits_list_from_clientVisits(client_visits_data)
+    for data in data_list:
+        data.firstdateTime = data.firstdateTime.replace(tzinfo=None)
+        data.firstdateTime = data.firstdateTime - timedelta(hours=5, minutes=00)
+        data.lastdateTime = data.lastdateTime.replace(tzinfo=None)
+        data.lastdateTime = data.lastdateTime - timedelta(hours=5, minutes=00)
+        row_num = row_num + 1
+        test = vars(data)
+        columns = [test[key] for key in test]
+        for col_num in range(len(columns)):
+            # For row three and four which are date times use date format
+            worksheet.write(
+                row_num,
+                col_num,
+                columns[col_num],
+                font_style if col_num != 3 and col_num != 4 else date_format,
+            )
+
+    workbook.save(response)
+    return response
+
+
+def export_orders_list_report_csv(request: HttpRequest):
+    orders_data = Order.objects.all()
+    if orders_data.__len__() == 0:
+        url = (
+            "{}?".format(reverse("orders_report")))
+        messages.error(request, "Could not export excel sheet with given parameters.")
+        response = HttpResponseRedirect(url)
+        return response
+
+    response = HttpResponse(content_type="application/ms-excel")
+    response["Content-Disposition"] = 'attachment; filename="orders_report.xls"'
+
+    workbook = xlwt.Workbook(encoding="utf-8")
+
+    # adding sheet
+    worksheet = workbook.add_sheet("Report")
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    # headers are bold
+    font_style.font.bold = True
+    font_style = xlwt.XFStyle()
+    # headers are bold
+    font_style.font.bold = True
+
+    # column header names, you can use your own headers here
+    columns = [
+        "Client Name",
+        "Item Description",
+        "Requested Quantity",
+        "Delivered Quantity",
+        "Date Entered",
+    ]
+
+    # write column headers in sheet
+    for col_num in range(len(columns)):
+        worksheet.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+    date_format = xlwt.XFStyle()
+    date_format.num_format_str = "dd/mm/yyyy HH:MM"
+
+    # get your data, from database or from a text file...
+    col_num = 0
+    for data in orders_data:
+        data.date = data.date.replace(tzinfo=None)
+        data.date = data.date - timedelta(hours=5, minutes=00)
+        row_num = row_num + 1
+        worksheet.write(row_num, col_num, data.client.first_name)
+        worksheet.write(row_num, col_num+1, data.item_description.item_description)
+        worksheet.write(row_num, col_num+2, data.request_quantity)
+        worksheet.write(row_num, col_num + 3, data.delivered_quantity)
+        worksheet.write(row_num, col_num + 4, data.date, date_format)
+
+    workbook.save(response)
+    return response
+
+
+def inventory_report(request):
+    data_list = Inventory.objects.all()
+    return render(request,'reports/inventory_report.html',{'data_list':data_list})
+
+
+def export_inventory_list_report_csv(request):
+    inv_data = Inventory.objects.all()
+    if inv_data.__len__() == 0:
+        url = (
+            "{}?".format(reverse("orders_report")))
+        messages.error(request, "Could not export excel sheet with given parameters.")
+        response = HttpResponseRedirect(url)
+        return response
+
+    response = HttpResponse(content_type="application/ms-excel")
+    response["Content-Disposition"] = 'attachment; filename="inventory_report.xls"'
+
+    workbook = xlwt.Workbook(encoding="utf-8")
+
+    # adding sheet
+    worksheet = workbook.add_sheet("Report")
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    # headers are bold
+    font_style.font.bold = True
+    font_style = xlwt.XFStyle()
+    # headers are bold
+    font_style.font.bold = True
+
+    # column header names, you can use your own headers here
+    columns = [
+        "UPS Code",
+        "Item Description",
+        "Total Quantity",
+    ]
+
+    # write column headers in sheet
+    for col_num in range(len(columns)):
+        worksheet.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+    date_format = xlwt.XFStyle()
+    date_format.num_format_str = "dd/mm/yyyy HH:MM"
+
+    # get your data, from database or from a text file...
+    col_num = 0
+    for data in inv_data:
+        row_num = row_num + 1
+        worksheet.write(row_num, col_num, data.UPScode)
+        worksheet.write(row_num, col_num + 1, data.item_description)
+        worksheet.write(row_num, col_num + 2, data.total_quantity)
+
+
+    workbook.save(response)
+    return response

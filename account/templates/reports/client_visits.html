@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block extrastyle %}
+<style>
+  .exportExcel {
+    background: url(https://img.icons8.com/material-outlined/24/000000/export-excel.png) 0 7px no-repeat;
+    background-size: 16px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    border: none;
+    box-shadow: unset;
+    padding: 0 0 0 16px !important;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if data_list|length > 0 %}
+<form
+  action="{% url 'export_client_visits_report_csv' %}"
+  method="get">
+  <div style="width: auto; margin-left: 20px; margin-bottom: 20px; float: left;">
+    <button type="submit" class="exportExcel"><span>Export to Excel</span></button>
+  </div>
+</form>
+<div id="tableWrap" >
+
+<br>
+<br>
+
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="sticky">Client ID</th>
+        <th class="sticky">Name</th>
+        <th class="sticky">First Visit Date</th>
+        <th class="sticky">Last Visit Date</th>
+        <th class="sticky">Number of Visits</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {% for client_visits in data_list %}
+      <tr>
+        <td>{{ client_visits.clientID }}</td>
+        <td>{{ client_visits.client_first_name }} {{ client_visits.client_last_name }}</td>
+        <td>{{ client_visits.firstdateTime }}</td>
+        <td>{{ client_visits.lastdateTime }}</td>
+        <td>{{ client_visits.numberofVisits }}</td>
+       </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div style="width: 100%; float: left;">
+  <p id="data">No data</p>
+</div>
+{% endif %}
+{% endblock content %}

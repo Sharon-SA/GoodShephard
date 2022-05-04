@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}
+    Reports
+{% endblock %}
+
+{% block content %}
+        <h1>List of Reports</h1>
+        <ul class="actionlist">
+        <li>
+                    <a href="{% url "client_visit_report" %}">Client Visit Report</a>
+                </li>
+                <li>
+                    <a href="{% url "orders_report" %}">Orders Report</a>
+                </li>
+            <li>
+                    <a href="{% url "inventory_report" %}">Inventory Report</a>
+                </li>
+
+
+        </ul>
+
+{% endblock %}

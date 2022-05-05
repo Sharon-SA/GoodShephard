@@ -31,6 +31,8 @@ class ll_ATS(unittest.TestCase):
         time.sleep(3)
         driver.find_element_by_xpath("/html/body/div[2]/ul/li[1]/a").click()
         time.sleep(3)
+        driver.find_element_by_xpath("/html/body/div[2]/form/div/button/span").click()
+        time.sleep(3)
 
 
 def tearDown(self):

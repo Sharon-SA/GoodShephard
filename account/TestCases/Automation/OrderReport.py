@@ -28,9 +28,11 @@ class ll_ATS(unittest.TestCase):
         # assert "Logged in"
         # client
         driver.find_element_by_xpath("/html/body/div[1]/ul/li[5]/a").click()
-        time.sleep(10)
         driver.find_element_by_xpath("/html/body/div[2]/ul/li[2]/a").click()
+        driver.find_element_by_xpath("/ html / body / div[2] / div[1] / form / div / button").click()
         time.sleep(10)
+
+
 
 
 def tearDown(self):

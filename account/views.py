@@ -219,18 +219,25 @@ def client_new(request):
 def order_new(request, pk):
     if request.method == "POST":
         form = NewOrderForm(request.POST)
+        visit_form = VisitForms(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
+            visit = visit_form.save(commit=False)
             order.created_date = timezone.now()
+            visit.created_date = timezone.now()
+            visit.client = order.client
+            visit.save()
+            order.visit = visit
             order.save()
             order = Order.objects.filter(created_date__lte=timezone.now())
             return render(request, 'crm/order_list.html',
                           {'order': order})
     else:
         form = NewOrderForm()
+        visitForm = VisitForms()
         print("Else", form.fields['client'])
         form.fields['client'].initial = pk
-    return render(request, 'crm/order_new.html', {'form': form})
+    return render(request, 'crm/order_new.html', {'form': form, 'visitForm': visitForm})
 
 
 def client_search(request):
@@ -341,7 +348,7 @@ def export_client_visits_report_csv(request: HttpRequest):
     client_visits_data = Visit.objects.all()
     if client_visits_data.__len__() == 0:
         url = (
-            "{}?".format(reverse("client_visits_report")) )
+            "{}?".format(reverse("client_visits_report")))
         messages.error(request, "Could not export excel sheet with given parameters.")
         response = HttpResponseRedirect(url)
         return response

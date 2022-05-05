@@ -37,20 +37,19 @@ urlpatterns = [
     path('reports/',views.viewReport, name='reports'),
     path('reports/clientvisits/', views.client_visits_report, name='client_visit_report'),
     path('reports/ordersfulfilled', views.client_orders_fulfilled, name='orders_report'),
-    path('reports/inventory',views.inventory_report, name='inventory_report'),
+    path('reports/inventory', views.inventory_report, name='inventory_report'),
     path(
-        "/reports/client_visits/csv",
+        "reports/client_visits/csv",
         views.export_client_visits_report_csv,
         name="export_client_visits_report_csv",
     ),
-
     path(
-        "/reports/orders_list/csv",
+        "reports/orders_list/csv",
         views.export_orders_list_report_csv,
         name="export_order_csv",
     ),
-path(
-        "/reports/inventory_list/csv",
+    path(
+        "reports/inventory_list/csv",
         views.export_inventory_list_report_csv,
         name="export_inventory_report_csv",
     ),

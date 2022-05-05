@@ -72,6 +72,7 @@ class Inventory(models.Model):
 
 
 class Order(models.Model):
+    visit = models.ForeignKey(Visit, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     UPScode = models.ForeignKey(Inventory, on_delete=models.SET_NULL, blank=True, null=True, related_name='inventory_UPScode')
     item_description = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name='inventory_item_description')

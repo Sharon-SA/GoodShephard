@@ -26,13 +26,17 @@ class ll_ATS(unittest.TestCase):
         driver.find_element_by_xpath("/html/body/div[2]/form/p[3]/input").click()
         time.sleep(1)
         # assert "Logged in"
-        # order
-        driver.find_element_by_xpath("/html/body/div[1]/ul/li[3]/a").click()
+        # reset password
+        driver.find_element_by_xpath("/html/body/div[2]/p/a[2]").click()
         time.sleep(1)
-        # driver.find_element_by_xpath("/html/body/div[2]/table/tbody/tr/td[8]/a").click()
-        # time.sleep(3)
-
-
+        driver.find_element_by_xpath("/html/body/div[2]/form/p[1]/input").send_keys(pwd)
+        time.sleep(1)
+        driver.find_element_by_xpath("/html/body/div[2]/form/p[2]/input").send_keys(pwd)
+        time.sleep(1)
+        driver.find_element_by_xpath("/html/body/div[2]/form/p[4]/input").send_keys(pwd)
+        time.sleep(1)
+        driver.find_element_by_xpath("/html/body/div[2]/form/p[5]/input").click()
+        time.sleep(3)
 
 
 def tearDown(self):

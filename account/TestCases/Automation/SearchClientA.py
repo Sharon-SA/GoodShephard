@@ -15,6 +15,7 @@ class ll_ATS(unittest.TestCase):
     def test_ll(self):
         user = "instructor"
         pwd = "gounomavs1a"
+        search="a"
         driver = self.driver
         driver.maximize_window()
         driver.get("http://foodpantry.pythonanywhere.com/")
@@ -26,11 +27,11 @@ class ll_ATS(unittest.TestCase):
         driver.find_element_by_xpath("/html/body/div[2]/form/p[3]/input").click()
         time.sleep(1)
         # assert "Logged in"
-        # order
-        driver.find_element_by_xpath("/html/body/div[1]/ul/li[3]/a").click()
+        # search bar
+        driver.find_element_by_xpath("/html/body/div[2]/div/form/input[2]").send_keys(search)
         time.sleep(1)
-        # driver.find_element_by_xpath("/html/body/div[2]/table/tbody/tr/td[8]/a").click()
-        # time.sleep(3)
+        driver.find_element_by_xpath("/html/body/div[2]/div/form/button").click()
+        time.sleep(3)
 
 
 

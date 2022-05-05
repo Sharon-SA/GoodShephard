@@ -24,7 +24,9 @@ class ll_ATS(unittest.TestCase):
         time.sleep(1)
         driver.find_element(By.XPATH, "/html/body/div[2]/form/p[3]/input").click()
         time.sleep(1)
-        # driver.find_element(By.XPATH, "/html/body/div[1]/span[2]/a").click()
+        #Logout
+        driver.find_element(By.XPATH, "/html/body/div[1]/span[2]/a").click()
+
 
 
 def tearDown(self):

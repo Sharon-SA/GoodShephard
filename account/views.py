@@ -171,7 +171,7 @@ def order_list(request):
 
 def order_edit(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    visit = get_object_or_404(Visit, pk=order.client.pk)
+    visit = get_object_or_404(Visit, pk=order.visit.pk)
 
     if request.method == "POST":
         # update
